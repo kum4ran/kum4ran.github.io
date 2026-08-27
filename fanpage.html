@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Son Heung-min — Sonny</title>
+<style>
+  :root{
+    --navy: #0c1730;
+    --navy-deep: #070d1c;
+    --navy-mid: #101f42;
+    --ink: #12131a;
+    --cream: #f2ede2;
+    --gold: #c9a24b;
+    --gold-bright: #e8cd85;
+    --red: #cd2e3a;
+    --line: rgba(242,237,226,0.16);
+    --ease: cubic-bezier(.22,.8,.28,1);
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body{
+    margin:0;
+    background: var(--cream);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3{
+    font-family: 'Arial Narrow', Arial, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    margin: 0;
+  }
+
+  .display{ font-family: 'Arial Black', Impact, 'Haettenschweiler', sans-serif; }
+  .mono{ font-family: 'Courier New', Courier, monospace; }
+
+  a { color: inherit; }
+  button{ font-family: inherit; }
+
+  /* ---------- film grain (ties to the "photograph" theme) ---------- */
+  .grain{
+    position: fixed;
+    inset: -60px;
+    z-index: 200;
+    pointer-events: none;
+    opacity: 0.045;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    animation: grainShift 0.7s steps(4) infinite;
+  }
+  @keyframes grainShift{
+    0%{ transform: translate(0,0); }
+    25%{ transform: translate(-2%,1%); }
+    50%{ transform: translate(1%,-2%); }
+    75%{ transform: translate(-1%,2%); }
+    100%{ transform: translate(0,0); }
+  }
+
+  /* ---------- scroll progress (touchline) ---------- */
+  .progress{
+    position: fixed;
+    top: 0; left: 0;
+    height: 3px;
+    width: 0%;
+    background: linear-gradient(90deg, var(--gold), var(--gold-bright));
+    z-index: 300;
+    transition: width .08s linear;
+  }
+
+  /* ---------- corner frame motif (signature element) ---------- */
+  .framed{ position: relative; }
+  .framed::before,
+  .framed::after,
+  .framed .fc-tr, .framed .fc-bl{
+    content: "";
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    border: 2px solid var(--gold);
+    opacity: 0.9;
+    transition: width .3s var(--ease), height .3s var(--ease), border-color .3s ease;
+  }
+  .framed::before{ top:-8px; left:-8px; border-right:none; border-bottom:none; }
+  .framed::after{ bottom:-8px; right:-8px; border-left:none; border-top:none; }
+  .framed .fc-tr{ top:-8px; right:-8px; border-left:none; border-bottom:none; }
+  .framed .fc-bl{ bottom:-8px; left:-8px; border-right:none; border-top:none; }
+  .framed:hover::before, .framed:hover::after,
+  .framed:hover .fc-tr, .framed:hover .fc-bl{
+    width: 30px; height: 30px; border-color: var(--gold-bright);
+  }
+
+  /* ---------- reveal-on-scroll ---------- */
+  .reveal{
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity .8s var(--ease), transform .8s var(--ease);
+  }
+  .reveal.in-view{ opacity: 1; transform: translateY(0); }
+
+  /* ---------- nav ---------- */
+  .topnav{
+    position: sticky;
+    top: 0;
+    z-index: 60;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 6vw;
+    background: rgba(12,23,48,0.86);
+    backdrop-filter: blur(10px);
+    color: var(--cream);
+    border-bottom: 1px solid var(--line);
+    transition: background .3s ease, padding .3s ease;
+  }
+  .topnav .brand{
+    font-family:'Arial Narrow', Arial, sans-serif;
+    font-weight: 600;
+    font-size: 1.05rem;
+    letter-spacing: 0.08em;
+  }
+  .brand .num{ color: var(--gold); }
+  .topnav nav a{
+    position: relative;
+    text-decoration:none;
+    font-family:'Courier New', Courier, monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    margin-left: 30px;
+    color: var(--cream);
+    opacity: 0.7;
+    padding-bottom: 4px;
+    transition: opacity .2s;
+  }
+  .topnav nav a::after{
+    content:"";
+    position:absolute;
+    left:0; bottom:0;
+    width: 0%;
+    height: 1px;
+    background: var(--gold-bright);
+    transition: width .25s var(--ease);
+  }
+  .topnav nav a:hover{ opacity: 1; }
+  .topnav nav a:hover::after{ width: 100%; }
+  .topnav nav a.active{ opacity: 1; color: var(--gold-bright); }
+  .topnav nav a.active::after{ width: 100%; }
+
+  /* ---------- hero ---------- */
+  .hero{
+    position: relative;
+    background:
+      radial-gradient(60% 50% at 85% 10%, rgba(201,162,75,0.16), transparent 60%),
+      radial-gradient(120% 140% at 20% 90%, #16264c 0%, var(--navy) 45%, var(--navy-deep) 100%);
+    color: var(--cream);
+    padding: 6vw 6vw 4vw;
+    overflow: hidden;
+    min-height: 94vh;
+    display: flex;
+    align-items: center;
+    perspective: 1000px;
+  }
+  .hero-spotlight{
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(280px circle at var(--mx,70%) var(--my,30%), rgba(232,205,133,0.14), transparent 55%);
+    pointer-events: none;
+    transition: background .1s linear;
+  }
+  .bokeh{
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(2px);
+    background: radial-gradient(circle at 35% 35%, rgba(232,205,133,0.5), rgba(232,205,133,0) 70%);
+    opacity: 0.5;
+    animation: drift 14s ease-in-out infinite;
+    pointer-events: none;
+  }
+  .bokeh.b1{ width: 90px; height: 90px; top: 12%; left: 8%; animation-duration: 16s; }
+  .bokeh.b2{ width: 50px; height: 50px; top: 65%; left: 20%; animation-duration: 12s; animation-delay: -4s; }
+  .bokeh.b3{ width: 130px; height: 130px; top: 30%; left: 92%; animation-duration: 20s; animation-delay: -8s; }
+  .bokeh.b4{ width: 60px; height: 60px; top: 78%; left: 78%; animation-duration: 15s; animation-delay: -2s; }
+  @keyframes drift{
+    0%, 100%{ transform: translate(0,0); }
+    50%{ transform: translate(18px, -24px); }
+  }
+
+  .hero-grid{
+    position: relative;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 4vw;
+    align-items: center;
+    z-index: 2;
+  }
+  .eyebrow{
+    font-family:'Courier New', Courier, monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    color: var(--gold-bright);
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    opacity: 0;
+    animation: fadeUp .7s var(--ease) .1s forwards;
+  }
+  .eyebrow::before{ content:""; width: 30px; height: 1px; background: var(--gold-bright); }
+
+  .hero-title-wrap{ perspective: 800px; }
+  .hero h1{
+    font-family: 'Arial Black', Impact, 'Haettenschweiler', sans-serif;
+    font-size: clamp(4.4rem, 11.5vw, 9.8rem);
+    line-height: 0.84;
+    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    color: var(--cream);
+  }
+  .hero h1 .outline{ color: transparent; -webkit-text-stroke: 2px var(--gold); display:block; }
+  .letter{
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(48px) rotateX(50deg);
+    animation: riseIn .8s var(--ease) forwards;
+    animation-delay: calc(var(--i) * 0.045s + 0.15s);
+    transform-origin: bottom;
+  }
+  @keyframes riseIn{
+    to{ opacity: 1; transform: translateY(0) rotateX(0); }
+  }
+  @keyframes fadeUp{
+    from{ opacity:0; transform: translateY(16px); }
+    to{ opacity:1; transform: translateY(0); }
+  }
+
+  .hero .full-name{
+    margin-top: 22px;
+    font-family:'Courier New', Courier, monospace;
+    font-size: 0.95rem;
+    letter-spacing: 0.05em;
+    color: rgba(242,237,226,0.72);
+    max-width: 46ch;
+    opacity: 0;
+    animation: fadeUp .7s var(--ease) .75s forwards;
+  }
+  .hero .full-name b{ color: var(--cream); font-weight: 600; }
+
+  .hero-stats{
+    display:flex;
+    gap: 34px;
+    margin-top: 40px;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp .7s var(--ease) .9s forwards;
+  }
+  .hero-stats div{ display:flex; flex-direction:column; }
+  .hero-stats .n{
+    font-family:'Arial Black', Impact, 'Haettenschweiler', sans-serif;
+    font-size: 2.3rem;
+    color: var(--gold-bright);
+    letter-spacing: 0.02em;
+  }
+  .hero-stats .l{
+    font-family:'Courier New', Courier, monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    opacity: 0.65;
+    margin-top: 4px;
+  }
+
+  /* ---------- hero interactive gallery (replaces the static frame) ---------- */
+  .hero-gallery{
+    position: relative;
+    justify-self: center;
+    width: 100%;
+    max-width: 380px;
+    opacity: 0;
+    animation: fadeUp .9s var(--ease) .35s forwards;
+    transition: transform .15s ease-out;
+    transform-style: preserve-3d;
+    will-change: transform;
+  }
+  .viewer{
+    position: relative;
+    background: var(--navy-deep);
+    aspect-ratio: 4/5;
+    max-height: 470px;
+    overflow: hidden;
+    box-shadow: 0 30px 60px -20px rgba(0,0,0,0.6);
+  }
+  .viewer img{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit: cover;
+    opacity: 0;
+    transform: scale(1.12);
+    transition: opacity .6s var(--ease), transform 8s linear;
+  }
+  .viewer img.active{ opacity: 1; transform: scale(1); }
+  .viewer img.active.ken{ transform: scale(1.09); }
+  .viewer-caption{
+    position:absolute;
+    left:0; right:0; bottom:0;
+    padding: 18px 20px 16px;
+    background: linear-gradient(to top, rgba(7,13,28,0.94), transparent);
+    color: var(--cream);
+  }
+  .viewer-caption .vc-tag{ font-family:'Courier New', Courier, monospace; font-size: 0.66rem; letter-spacing: 0.12em; color: var(--gold-bright); text-transform: uppercase; display:block; opacity:0; transform: translateY(6px); transition: opacity .4s ease, transform .4s ease; }
+  .viewer-caption p{ margin: 6px 0 0; font-size: 0.85rem; max-width: 42ch; line-height: 1.5; opacity:0; transform: translateY(6px); transition: opacity .4s ease .05s, transform .4s ease .05s; }
+  .viewer-caption.show .vc-tag, .viewer-caption.show p{ opacity:1; transform: translateY(0); }
+  .viewer-nav{ position:absolute; top: 50%; transform: translateY(-50%); width: 100%; display:flex; justify-content: space-between; padding: 0 10px; pointer-events:none; }
+  .viewer-nav button{
+    pointer-events:all; width: 38px; height: 38px; border-radius: 50%;
+    border: 1px solid rgba(242,237,226,0.4); background: rgba(7,13,28,0.45); color: var(--cream);
+    font-family:'Courier New', Courier, monospace; cursor: pointer; font-size: 1.1rem;
+    transition: background .25s ease, border-color .25s ease, transform .25s var(--ease);
+  }
+  .viewer-nav button:hover{ background: var(--gold); border-color: var(--gold); color: var(--navy-deep); transform: scale(1.08); }
+  .viewer-nav button:active{ transform: scale(0.94); }
+
+  .progress-dots{ position:absolute; top: 16px; left: 50%; transform: translateX(-50%); display:flex; gap: 6px; z-index: 3; }
+  .progress-dots span{ width: 20px; height: 3px; background: rgba(242,237,226,0.3); overflow:hidden; position:relative; }
+  .progress-dots span::after{ content:""; position:absolute; inset:0; background: var(--gold-bright); transform: scaleX(0); transform-origin: left; transition: transform .3s ease; }
+  .progress-dots span.active::after{ transform: scaleX(1); }
+
+  .hero-tag{
+    position:absolute;
+    bottom: -16px;
+    left: -8px;
+    background: var(--gold);
+    color: var(--navy-deep);
+    font-family:'Courier New', Courier, monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.06em;
+    padding: 6px 11px;
+    font-weight: 600;
+    z-index: 3;
+  }
+
+  .thumb-rail{ display:flex; flex-direction: row; justify-content:center; gap: 10px; margin-top: 18px; }
+  .thumb{
+    padding: 0;
+    border: 2px solid transparent;
+    background: none;
+    cursor: pointer;
+    line-height: 0;
+    transition: border-color .25s ease, transform .25s var(--ease);
+  }
+  .thumb:hover{ transform: translateY(-2px); }
+  .thumb img{ width: 46px; height: 46px; object-fit: cover; display:block; filter: grayscale(1) brightness(0.85); transition: filter .3s ease; }
+  .thumb.active{ border-color: var(--gold-bright); }
+  .thumb.active img{ filter: grayscale(0) brightness(1); }
+
+  .gallery-hint{
+    margin-top: 14px;
+    text-align:center;
+    font-family:'Courier New', Courier, monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    color: rgba(242,237,226,0.4);
+  }
+  .gallery-hint .arrow{ display:inline-block; animation: nudge 1.6s ease-in-out infinite; }
+  @keyframes nudge{ 0%,100%{ transform: translateX(0);} 50%{ transform: translateX(5px);} }
+
+  .scroll-cue{
+    position:absolute;
+    left: 6vw;
+    bottom: 26px;
+    font-family:'Courier New', Courier, monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.15em;
+    color: rgba(242,237,226,0.5);
+    display:flex;
+    align-items:center;
+    gap:10px;
+    z-index: 2;
+  }
+  .scroll-cue .bar{ width: 1px; height: 26px; background: rgba(242,237,226,0.5); animation: cue 1.8s ease-in-out infinite; }
+  @keyframes cue{
+    0%,100%{ transform: scaleY(0.4); opacity: 0.3; transform-origin: top;}
+    50%{ transform: scaleY(1); opacity: 0.9; transform-origin: top;}
+  }
+
+  /* ---------- section shell ---------- */
+  section{ padding: 8vw 6vw; }
+  .section-head{
+    display:flex;
+    align-items:baseline;
+    justify-content: space-between;
+    margin-bottom: 3.2vw;
+    border-bottom: 1px solid rgba(0,0,0,0.12);
+    padding-bottom: 18px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .section-head h2{
+    font-family: 'Arial Black', Impact, 'Haettenschweiler', sans-serif;
+    font-size: clamp(2.2rem, 4.6vw, 3.8rem);
+    color: var(--navy);
+    letter-spacing: 0.01em;
+  }
+  .section-index{
+    font-family:'Courier New', Courier, monospace;
+    font-size: 0.75rem;
+    color: var(--red);
+    letter-spacing: 0.1em;
+  }
+
+  /* ---------- bio ---------- */
+  .bio{ background: var(--cream); }
+  .bio-grid{ display:grid; grid-template-columns: 1.4fr 1fr; gap: 5vw; }
+  .bio-copy p{ font-size: 1.08rem; line-height: 1.75; color: #2a2a2a; margin: 0 0 1.3em; }
+  .bio-copy p:first-of-type::first-letter{
+    font-family:'Arial Black', Impact, 'Haettenschweiler', sans-serif;
+    font-size: 3.6rem;
+    float: left;
+    line-height: 0.75;
+    padding-right: 10px;
+    padding-top: 6px;
+    color: var(--navy);
+  }
+  .id-card{
+    background: var(--navy);
+    color: var(--cream);
+    padding: 30px;
+    align-self: start;
+    font-family:'Courier New', Courier, monospace;
+    transition: transform .35s var(--ease), box-shadow .35s var(--ease);
+  }
+  .id-card:hover{ transform: translateY(-4px); box-shadow: 0 24px 40px -20px rgba(12,23,48,0.5); }
+  .id-card h3{ font-family:'Arial Narrow', Arial, sans-serif; color: var(--gold-bright); font-size: 1.1rem; margin-bottom: 20px; letter-spacing: 0.08em; }
+  .id-row{ display:flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px dashed rgba(242,237,226,0.2); font-size: 0.82rem; transition: padding-left .2s ease; }
+  .id-row:hover{ padding-left: 6px; }
+  .id-row:last-child{ border-bottom:none; }
+  .id-row span:first-child{ opacity: 0.55; }
+  .id-row span:last-child{ text-align:right; }
+
+  /* ---------- facts ---------- */
+  .facts{ background: var(--navy-deep); color: var(--cream); }
+  .facts .section-head{ border-bottom-color: rgba(242,237,226,0.15); }
+  .facts .section-head h2{ color: var(--cream); }
+  .fact-grid{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: rgba(242,237,226,0.14); border: 1px solid rgba(242,237,226,0.14); }
+  .fact-card{
+    position: relative;
+    background: var(--navy-deep);
+    padding: 34px 28px;
+    min-height: 230px;
+    display:flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: background .35s ease, transform .35s var(--ease);
+    overflow: hidden;
+  }
+  .fact-card::before{
+    content:"";
+    position:absolute;
+    inset: 0;
+    background: radial-gradient(220px circle at var(--fx,50%) var(--fy,50%), rgba(201,162,75,0.14), transparent 60%);
+    opacity: 0;
+    transition: opacity .3s ease;
+  }
+  .fact-card:hover{ background: #0f1c3c; transform: translateY(-6px); }
+  .fact-card:hover::before{ opacity: 1; }
+  .fact-card .fnum{ font-family:'Courier New', Courier, monospace; color: var(--gold); font-size: 0.78rem; letter-spacing: 0.1em; position:relative; }
+  .fact-card p{ font-size: 1rem; line-height: 1.55; margin: 18px 0 0; color: rgba(242,237,226,0.92); position:relative; }
+
+  /* ---------- footer ---------- */
+  footer{ background: var(--navy-deep); color: rgba(242,237,226,0.55); text-align:center; padding: 30px 6vw; font-family:'Courier New', Courier, monospace; font-size: 0.72rem; letter-spacing: 0.08em; border-top: 1px solid rgba(242,237,226,0.1); }
+  footer b{ color: var(--gold-bright); }
+
+  /* ---------- responsive ---------- */
+  @media (max-width: 900px){
+    .hero-grid{ grid-template-columns: 1fr; }
+    .hero-gallery{ order: -1; max-width: 320px; }
+    .bio-grid{ grid-template-columns: 1fr; }
+    .fact-grid{ grid-template-columns: 1fr; }
+    .topnav nav{ display:none; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation: none !important; transition: none !important; }
+    .letter, .eyebrow, .full-name, .hero-stats, .hero-gallery{ opacity: 1 !important; transform: none !important; }
+    .grain{ display: none; }
+  }
+
+  :focus-visible{ outline: 2px solid var(--gold); outline-offset: 3px; }
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+<div class="progress" id="progressBar" aria-hidden="true"></div>
+
+<div class="topnav">
+  <div class="brand">SON <span class="num">·</span> 7</div>
+  <nav>
+    <a href="#hero" data-section="hero">Gallery</a>
+    <a href="#bio" data-section="bio">Bio</a>
+    <a href="#facts" data-section="facts">Facts</a>
+  </nav>
+</div>
+
+<header class="hero" id="hero">
+  <div class="hero-spotlight" id="spotlight"></div>
+  <div class="bokeh b1"></div>
+  <div class="bokeh b2"></div>
+  <div class="bokeh b3"></div>
+  <div class="bokeh b4"></div>
+
+  <div class="hero-grid">
+    <div>
+      <div class="eyebrow">CAPTAIN · SOUTH KOREA</div>
+      <div class="hero-title-wrap">
+        <h1>
+          <span class="line1" id="line1"></span>
+          <span class="outline line2" id="line2"></span>
+        </h1>
+      </div>
+      <p class="full-name"><b>Son Heung-min</b> (손흥민) — forward, born July 8, 1992 in Chuncheon, South Korea. A decade at Tottenham Hotspur, now leading the line for LAFC and captaining South Korea into a fourth World Cup.</p>
+      <div class="hero-stats">
+        <div><span class="n mono" data-count="169">0</span><span class="l">GOALS FOR SPURS</span></div>
+        <div><span class="n mono" data-count="431">0</span><span class="l">SPURS APPEARANCES</span></div>
+        <div><span class="n mono" data-count="51">0</span><span class="l">GOALS FOR SOUTH KOREA</span></div>
+      </div>
+    </div>
+
+    <div class="hero-gallery" id="heroPhoto">
+      <div class="viewer framed" id="viewer">
+        <span class="fc-tr"></span><span class="fc-bl"></span>
+        <div class="progress-dots" id="dots">
+          <span class="active"></span><span></span><span></span>
+        </div>
+        <img class="active ken" src="images/son-frame-celebration.png" alt="Son Heung-min performing his hand-framing goal celebration in a Tottenham away kit" data-index="0">
+        <img src="images/son-korea-mask.png" alt="Son Heung-min wearing a black protective mask in a South Korea kit" data-index="1">
+        <img src="images/son-club-portrait.png" alt="Studio portrait of Son Heung-min in a Tottenham home kit" data-index="2">
+        <div class="viewer-caption show" id="captionBox">
+          <span class="vc-tag mono" id="capTag">Celebration</span>
+          <p id="capText">"The Frame" — Son's trademark celebration, taking an imaginary photo of the moment after he scores.</p>
+        </div>
+        <div class="viewer-nav">
+          <button id="prevBtn" aria-label="Previous photo">‹</button>
+          <button id="nextBtn" aria-label="Next photo">›</button>
+        </div>
+        <div class="hero-tag">IN THE FRAME</div>
+      </div>
+      <div class="thumb-rail" id="thumbRail">
+        <button class="thumb active" data-index="0" aria-label="Show celebration photo"><img src="images/son-frame-celebration.png" alt=""></button>
+        <button class="thumb" data-index="1" aria-label="Show South Korea photo"><img src="images/son-korea-mask.png" alt=""></button>
+        <button class="thumb" data-index="2" aria-label="Show Tottenham portrait"><img src="images/son-club-portrait.png" alt=""></button>
+      </div>
+      <div class="gallery-hint">← BROWSE WITH ARROWS OR SWIPE <span class="arrow">→</span></div>
+    </div>
+  </div>
+  <div class="scroll-cue"><div class="bar"></div>SCROLL</div>
+</header>
+
+<section class="bio" id="bio">
+  <div class="section-head reveal">
+    <h2>The Short Version</h2>
+    <span class="section-index mono">01 — BIO</span>
+  </div>
+  <div class="bio-grid">
+    <div class="bio-copy">
+      <p class="reveal">Son Heung-min grew up in Chuncheon under the relentless, almost monastic coaching of his father, a former pro footballer who drilled him for hours a day on ball control before he ever played a competitive match. That foundation took him to Germany as a teenager, first at Hamburger SV and then Bayer Leverkusen, before Tottenham Hotspur signed him in 2015 for what was then a club-record fee for an Asian player.</p>
+      <p class="reveal">Over the next decade he became the most decorated Asian player in Premier League history — sharing the Golden Boot in 2021/22, becoming the first Asian to reach 100 league goals, and being named Spurs captain in 2023. In August 2025 he left north London for Los Angeles FC, a move he has described as partly a deliberate step to prepare for playing on North American soil ahead of the 2026 World Cup. He captains South Korea into that tournament, his fourth as a Taegeuk Warrior.</p>
+      <p class="reveal">Off the pitch, Son is known as one of football's most consistently humble superstars — soft-spoken, close with his family, and just as likely to be seen fetching cones at training as scoring wonder goals in front of 60,000 people.</p>
+    </div>
+    <div class="id-card framed reveal">
+      <span class="fc-tr"></span><span class="fc-bl"></span>
+      <h3>Player File</h3>
+      <div class="id-row"><span>Full name</span><span>Son Heung-min</span></div>
+      <div class="id-row"><span>Born</span><span>Jul 8, 1992 · Chuncheon</span></div>
+      <div class="id-row"><span>Position</span><span>Forward / Left Winger</span></div>
+      <div class="id-row"><span>Foot</span><span>Both</span></div>
+      <div class="id-row"><span>Current club</span><span>LAFC (since 2025)</span></div>
+      <div class="id-row"><span>Former club</span><span>Tottenham (2015–25)</span></div>
+      <div class="id-row"><span>National team</span><span>South Korea, captain</span></div>
+      <div class="id-row"><span>Nickname</span><span>Sonny</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="facts" id="facts">
+  <div class="section-head reveal">
+    <h2>Scouting Report</h2>
+    <span class="section-index mono">02 — FACTS</span>
+  </div>
+  <div class="fact-grid">
+    <div class="fact-card reveal">
+      <span class="fnum">01</span>
+      <p>Shared the 2021/22 Premier League Golden Boot with Mohamed Salah, both finishing on 23 goals — the first time an Asian player had topped the league's scoring charts.</p>
+    </div>
+    <div class="fact-card reveal">
+      <span class="fnum">02</span>
+      <p>Won the 2020 Puskás Award for a solo, coast-to-coast run and finish against Burnley — voted the best goal in world football that year.</p>
+    </div>
+    <div class="fact-card reveal">
+      <span class="fnum">03</span>
+      <p>Became the first Asian player to score 100 Premier League goals, capping a rise that also made him the club's fifth-highest scorer of all time.</p>
+    </div>
+    <div class="fact-card reveal">
+      <span class="fnum">04</span>
+      <p>Played the entire 2022 World Cup in a custom carbon-fibre mask after fracturing his eye socket weeks earlier, captaining South Korea into the knockout rounds regardless.</p>
+    </div>
+    <div class="fact-card reveal">
+      <span class="fnum">05</span>
+      <p>Left Tottenham in August 2025 after a decade to join LAFC — a move he's said was partly timed to get used to North American conditions before the 2026 World Cup.</p>
+    </div>
+    <div class="fact-card reveal">
+      <span class="fnum">06</span>
+      <p>Scored twice inside the first 23 minutes of the 2026 MLS All-Star Game to win MVP honours in his first season in Major League Soccer.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  Fan-made tribute page · Built with HTML, CSS &amp; JS · <b>Heung-min Son</b> — Sonny
+</footer>
+
+<script>
+(function(){
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- letter reveal for hero title ---------- */
+  function buildLetters(el, text){
+    var i = 0;
+    text.split('').forEach(function(ch){
+      var span = document.createElement('span');
+      span.className = 'letter';
+      span.style.setProperty('--i', i);
+      span.textContent = ch === ' ' ? '\u00A0' : ch;
+      el.appendChild(span);
+      i++;
+    });
+  }
+  buildLetters(document.getElementById('line1'), 'SON');
+  buildLetters(document.getElementById('line2'), 'HEUNG MIN');
+
+  /* ---------- scroll progress bar ---------- */
+  var progressBar = document.getElementById('progressBar');
+  function updateProgress(){
+    var h = document.documentElement;
+    var scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+    progressBar.style.width = scrolled + '%';
+  }
+  document.addEventListener('scroll', function(){ requestAnimationFrame(updateProgress); }, {passive:true});
+
+  /* ---------- hero spotlight + parallax tilt ---------- */
+  var hero = document.getElementById('hero');
+  var spotlight = document.getElementById('spotlight');
+  var heroPhoto = document.getElementById('heroPhoto');
+  var pointerFine = window.matchMedia('(pointer:fine)').matches;
+
+  if(!reduceMotion && pointerFine){
+    hero.addEventListener('mousemove', function(e){
+      var r = hero.getBoundingClientRect();
+      var x = ((e.clientX - r.left) / r.width) * 100;
+      var y = ((e.clientY - r.top) / r.height) * 100;
+      spotlight.style.setProperty('--mx', x + '%');
+      spotlight.style.setProperty('--my', y + '%');
+
+      var px = heroPhoto.getBoundingClientRect();
+      var cx = (e.clientX - px.left - px.width/2) / px.width;
+      var cy = (e.clientY - px.top - px.height/2) / px.height;
+      var rotY = cx * 8;
+      var rotX = cy * -8;
+      heroPhoto.style.transform = 'rotateY(' + rotY + 'deg) rotateX(' + rotX + 'deg)';
+    });
+    hero.addEventListener('mouseleave', function(){
+      heroPhoto.style.transform = 'rotateY(0deg) rotateX(0deg)';
+    });
+  }
+
+  /* ---------- fact card cursor glow ---------- */
+  document.querySelectorAll('.fact-card').forEach(function(card){
+    card.addEventListener('mousemove', function(e){
+      var r = card.getBoundingClientRect();
+      card.style.setProperty('--fx', ((e.clientX - r.left) / r.width * 100) + '%');
+      card.style.setProperty('--fy', ((e.clientY - r.top) / r.height * 100) + '%');
+    });
+  });
+
+  /* ---------- animated stat counters ---------- */
+  var counted = false;
+  function animateCounters(){
+    if(counted) return;
+    counted = true;
+    document.querySelectorAll('.hero-stats .n').forEach(function(el){
+      var target = parseInt(el.dataset.count, 10);
+      if(reduceMotion){ el.textContent = target; return; }
+      var start = null;
+      var duration = 1300;
+      function step(ts){
+        if(!start) start = ts;
+        var progress = Math.min((ts - start) / duration, 1);
+        var eased = 1 - Math.pow(1 - progress, 3);
+        el.textContent = Math.floor(eased * target);
+        if(progress < 1) requestAnimationFrame(step);
+        else el.textContent = target;
+      }
+      requestAnimationFrame(step);
+    });
+  }
+  setTimeout(animateCounters, 900);
+
+  /* ---------- scroll reveal ---------- */
+  var revealEls = document.querySelectorAll('.reveal');
+  if('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){
+          var delay = Array.prototype.indexOf.call(entry.target.parentNode.children, entry.target) * 60;
+          entry.target.style.transitionDelay = Math.min(delay, 300) + 'ms';
+          entry.target.classList.add('in-view');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    revealEls.forEach(function(el){ io.observe(el); });
+  } else {
+    revealEls.forEach(function(el){ el.classList.add('in-view'); });
+  }
+
+  /* ---------- nav active section highlight ---------- */
+  var navLinks = document.querySelectorAll('.topnav nav a');
+  var sections = ['hero','bio','facts'].map(function(id){ return document.getElementById(id); });
+  if('IntersectionObserver' in window){
+    var navIo = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        var link = document.querySelector('.topnav nav a[data-section="' + entry.target.id + '"]');
+        if(entry.isIntersecting){
+          navLinks.forEach(function(l){ l.classList.remove('active'); });
+          if(link) link.classList.add('active');
+        }
+      });
+    }, { threshold: 0.5 });
+    sections.forEach(function(s){ if(s) navIo.observe(s); });
+  }
+
+  /* ---------- gallery (now embedded in the hero) ---------- */
+  var images = Array.prototype.slice.call(document.querySelectorAll('#viewer img'));
+  var thumbs = Array.prototype.slice.call(document.querySelectorAll('.thumb'));
+  var dots = Array.prototype.slice.call(document.querySelectorAll('#dots span'));
+  var capTag = document.getElementById('capTag');
+  var capText = document.getElementById('capText');
+  var captionBox = document.getElementById('captionBox');
+  var prevBtn = document.getElementById('prevBtn');
+  var nextBtn = document.getElementById('nextBtn');
+  var current = 0;
+
+  var captions = [
+    { tag: 'Celebration', text: '"The Frame" — Son\u2019s trademark celebration, taking an imaginary photo of the moment after he scores.' },
+    { tag: 'Country · 2022', text: 'A custom carbon-fibre mask, worn through the 2022 World Cup to protect a fractured eye socket while captaining South Korea.' },
+    { tag: 'Club · Portrait', text: 'Ten seasons in a Tottenham shirt, from 2015 to 2025 \u2014 431 appearances and 169 goals in north London.' }
+  ];
+
+  function show(index){
+    var next = (index + images.length) % images.length;
+    if(next === current) return;
+    current = next;
+
+    images.forEach(function(img){
+      var isActive = Number(img.dataset.index) === current;
+      img.classList.toggle('active', isActive);
+      if(isActive){
+        img.classList.remove('ken');
+        void img.offsetWidth;
+        if(!reduceMotion) img.classList.add('ken');
+      }
+    });
+    thumbs.forEach(function(t){ t.classList.toggle('active', Number(t.dataset.index) === current); });
+    dots.forEach(function(d, i){ d.classList.toggle('active', i === current); });
+
+    captionBox.classList.remove('show');
+    setTimeout(function(){
+      capTag.textContent = captions[current].tag;
+      capText.textContent = captions[current].text;
+      captionBox.classList.add('show');
+    }, 200);
+  }
+
+  thumbs.forEach(function(t){ t.addEventListener('click', function(){ show(Number(t.dataset.index)); }); });
+  prevBtn.addEventListener('click', function(){ show(current - 1); });
+  nextBtn.addEventListener('click', function(){ show(current + 1); });
+
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'ArrowRight') show(current + 1);
+    if(e.key === 'ArrowLeft') show(current - 1);
+  });
+
+  var viewer = document.getElementById('viewer');
+  var touchStartX = null;
+  viewer.addEventListener('touchstart', function(e){ touchStartX = e.changedTouches[0].screenX; }, {passive:true});
+  viewer.addEventListener('touchend', function(e){
+    if(touchStartX === null) return;
+    var dx = e.changedTouches[0].screenX - touchStartX;
+    if(Math.abs(dx) > 40){ dx < 0 ? show(current + 1) : show(current - 1); }
+    touchStartX = null;
+  }, {passive:true});
+})();
+</script>
+
+</body>
+</html>
